@@ -5,7 +5,8 @@ from datasets import Dataset
 import time
 import torch
 import gc
-
+import os
+# os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:47000"
 torch.cuda.empty_cache()
 gc.collect()
 
@@ -17,13 +18,13 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(model_path, 
                                              device_map="auto", 
                                              trust_remote_code=True, 
-                                             offload_folder="offload")
+                                             offload_folder="offload").to(device)
 
 for param in model.parameters():
     param.requires_grad = True
 
 
-model = torch.nn.DataParallel(model, device_ids = [0, 1])
+model = torch.nn.DataParallel(model, device_ids = [0, 1, 2, 3])
 
 def print_number_of_trainable_model_parameters(model):
     trainable_model_params = 0
@@ -58,7 +59,7 @@ torch.cuda.empty_cache()
 EPOCHS = 1
 PRINT_INFO = True
 LR = 1e-3
-BATCH_SIZE = 4
+BATCH_SIZE = 2
 
 training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
@@ -78,9 +79,9 @@ trainer = Trainer(
     args=peft_training_args,
     train_dataset=tokenized_datasets,
 )
-
+start = time.time()
 trainer.train()
-
+print("Training time for Original model fine tuning: ", round(time.time() - start), " Seconds. ", flush = True)
 new_model_path="./Jais_original_model-checkpoint-local"
 
 trainer.model.save_pretrained(new_model_path)
