@@ -6,7 +6,10 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments,
 from Data_processing import get_data_final
 from datasets import Dataset
 
+
 import time
+
+#torch.set_default_dtype(torch.float16)
 
 
 od.download('https://www.kaggle.com/datasets/fadyelkbeer/arabic-text-summarization-30-000')
@@ -20,7 +23,6 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 model = AutoModelForCausalLM.from_pretrained(model_path,
                                              offload_folder="offload",
-                                             torch_dtype = torch.bfloat16,
                                              trust_remote_code=True)
 
 train=data_df.sample(frac=0.7,random_state=7) # Create training of 70% of the data
@@ -64,7 +66,7 @@ test_tokenized_datasets = test_tokenized_datasets.remove_columns(['summary', 'te
 
 EPOCHS = 25
 LR = 1e-4
-BATCH_SIZE = 2
+BATCH_SIZE = 1
 
 training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
@@ -77,10 +79,11 @@ training_args = TrainingArguments(
     logging_steps=1,
     logging_strategy = 'epoch',
     max_steps=-1,
-    bf16 = True,
+    fp16 = True,
     push_to_hub = True,
-    push_to_hub_model_id = 'JAIS_Text_Summarizer_Basic_13B',
-    push_to_hub_token = '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'
+    hub_model_id = 'JAIS_Text_Summarizer_Basic_13B',
+    hub_token = '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',
+    deepspeed="deep_speed_config.json"
 )
 
 trainer = Trainer(
