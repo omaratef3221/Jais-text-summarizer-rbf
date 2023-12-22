@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 model = AutoModelForCausalLM.from_pretrained(model_path,
                                              offload_folder="offload",
-                                             dtype = torch.bfloat16,
+                                             torch_dtype = torch.bfloat16,
                                              trust_remote_code=True)
 
 train=data_df.sample(frac=0.7,random_state=7) # Create training of 70% of the data
