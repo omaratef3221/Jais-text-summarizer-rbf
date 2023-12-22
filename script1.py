@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 model = AutoModelForCausalLM.from_pretrained(model_path,
                                              offload_folder="offload",
-                                             dtype = torch.float16,
+                                             dtype = torch.bfloat16,
                                              trust_remote_code=True)
 
 train=data_df.sample(frac=0.7,random_state=7) # Create training of 70% of the data
@@ -77,7 +77,7 @@ training_args = TrainingArguments(
     logging_steps=1,
     logging_strategy = 'epoch',
     max_steps=-1,
-    fp16 = True,
+    bf16 = True,
     push_to_hub = True,
     push_to_hub_model_id = 'JAIS_Text_Summarizer_Basic_13B',
     push_to_hub_token = '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'
