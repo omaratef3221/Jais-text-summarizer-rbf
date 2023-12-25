@@ -79,6 +79,7 @@ training_args = TrainingArguments(
     num_train_epochs=25,
     per_device_train_batch_size=BATCH_SIZE,
     # per_device_eval_batch_size = BATCH_SIZE,
+    gradient_accumulation_steps = 32,
     logging_steps=1,
     logging_strategy = 'epoch',
     max_steps=-1,
