@@ -67,7 +67,7 @@ test_tokenized_datasets = test_tokenized_datasets.remove_columns(['summary', 'te
 
 EPOCHS = 25
 LR = 1e-4
-BATCH_SIZE = 1
+BATCH_SIZE = 4
 
 training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
@@ -75,17 +75,23 @@ training_args = TrainingArguments(
     output_dir=training_output_dir,
     learning_rate=LR,
     num_train_epochs=25,
-    per_device_train_batch_size=BATCH_SIZE,
-    per_device_eval_batch_size = BATCH_SIZE,
+    per_device_train_batch_size=BATCH_SIZE // 4,
+    per_device_eval_batch_size=BATCH_SIZE,
+    gradient_accumulation_steps=4,
     logging_steps=1,
-    logging_strategy = 'epoch',
+    logging_strategy='epoch',
     max_steps=-1,
-    bf16 = True,
-    push_to_hub = True,
-    hub_model_id = 'JAIS_Text_Summarizer_Basic_13B',
-    hub_token = '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',
-    # deepspeed="deep_speed_config.json"
+    bf16=True,
+    push_to_hub=True,
+    hub_model_id='JAIS_Text_Summarizer_Basic_13B',
+    hub_token='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',
+    load_best_model_at_end=True,
+    metric_for_best_model='loss',
+    save_strategy='epoch',
 )
+
+# Additional setup for distributed training may be required here
+
 
 trainer = Trainer(
     model=model,
