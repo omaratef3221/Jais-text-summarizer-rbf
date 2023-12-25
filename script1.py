@@ -66,7 +66,7 @@ test_tokenized_datasets = test_tokenized_datasets.remove_columns(['summary', 'te
 
 EPOCHS = 25
 LR = 1e-4
-BATCH_SIZE = 1
+BATCH_SIZE = 4
 
 training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
@@ -74,8 +74,8 @@ training_args = TrainingArguments(
     output_dir=training_output_dir,
     learning_rate=LR,
     num_train_epochs=25,
-    per_device_train_batch_size=BATCH_SIZE,
-    per_device_eval_batch_size = BATCH_SIZE,
+    # per_device_train_batch_size=BATCH_SIZE,
+    # per_device_eval_batch_size = BATCH_SIZE,
     logging_steps=1,
     logging_strategy = 'epoch',
     max_steps=-1,
