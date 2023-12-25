@@ -7,7 +7,7 @@ from Data_processing import get_data_final
 from datasets import Dataset
 import time
 from torch.nn.parallel import DistributedDataParallel as DDP
-import os
+
 
 torch.set_default_dtype(torch.float16)
 
@@ -26,13 +26,6 @@ model = AutoModelForCausalLM.from_pretrained(model_path,
                                              torch_dtype=torch.float16,
                                              trust_remote_code=True)
 
-os.environ['MASTER_ADDR'] = 'localhost'
-os.environ['MASTER_PORT'] = '12355'
-torch.distributed.init_process_group(backend='nccl')
-
-# Assuming your model and optimizer are defined (model, optimizer)
-model = model.to('cuda')
-model = DDP(model, device_ids=[torch.cuda.current_device()])
 
 
 train=data_df.sample(frac=0.7,random_state=7) # Create training of 70% of the data
