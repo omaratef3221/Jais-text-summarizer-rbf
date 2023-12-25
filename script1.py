@@ -44,8 +44,8 @@ def tokenize_function(example):
     start_prompt = 'قم بتلخيص هذه الفقرة: \n\n'
     end_prompt = '\n\nالتلخيص: '
     prompt = [start_prompt + dialogue + end_prompt for dialogue in example["text"]]
-    example['input_ids'] = tokenizer(prompt, padding="max_length", truncation=True, return_tensors="pt").input_ids
-    example['labels'] = tokenizer(example["summary"], padding="max_length", truncation=True, return_tensors="pt").input_ids
+    example['input_ids'] = tokenizer(prompt, max_length = 1024, padding="max_length", truncation=True, return_tensors="pt").input_ids
+    example['labels'] = tokenizer(example["summary"], max_length = 1024, padding="max_length", truncation=True, return_tensors="pt").input_ids
 
     return example
 
