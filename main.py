@@ -27,6 +27,8 @@ def main(args):
     tokenizer, model  = get_model(args.model_id)
     data = get_data_final()
     
+    data = Dataset.from_pandas(data)
+    
     training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
     print("Number of parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
