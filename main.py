@@ -65,8 +65,12 @@ def main(args):
     # trainer.save_model(f"./{args.model_id.split('/')[1]}")
     # trainer.save_tokenzer(f"./{args.model_id.split('/')[1]}")
     
+    requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Training Done".encode(encoding='utf-8'))
+    
     trainer.push_to_hub(f"{args.model_id.split('/')[1]}-arabic-text-summarizer")
     tokenizer.push_to_hub(f"{args.model_id.split('/')[1]}-arabic-text-summarizer")
+    
+    requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Model Uploaded to HuggingFace ".encode(encoding='utf-8'))
     
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Done ".encode(encoding='utf-8'))
     
