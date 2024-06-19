@@ -61,7 +61,9 @@ def main(args):
     data_collator=collator,
     )
     
+    t1 = time.time()
     trainer.train()
+    print("time taken: ", round((time.time() - t1), 5), flush=True)
     # trainer.save_model(f"./{args.model_id.split('/')[1]}")
     # trainer.save_tokenzer(f"./{args.model_id.split('/')[1]}")
     
