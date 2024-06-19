@@ -55,7 +55,7 @@ def main(args):
     trainer = SFTTrainer(
     model,
     train_dataset=data,
-    formatting_func=prepare_data,
+    formatting_func=preprocess_dataset,
     data_collator=collator,
     )
     
