@@ -5,7 +5,7 @@ import argparse
 from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig
 from transformers import TrainingArguments
 from get_model import *
-from get_data import get_dataset, prepare_data
+from get_data import *
 import time
 import requests
 
