@@ -62,10 +62,11 @@ def main(args):
     )
     
     trainer.train()
-    trainer.save_model(f"./{args.model_id.split('/')[1]}")
-    trainer.save_tokenzer(f"./{args.model_id.split('/')[1]}")
+    # trainer.save_model(f"./{args.model_id.split('/')[1]}")
+    # trainer.save_tokenzer(f"./{args.model_id.split('/')[1]}")
     
-    trainer.push_to_hub(f"omaratef3221/{args.model_id.split('/')[1]}-arabic-text-summarizer")
+    trainer.push_to_hub(f"{args.model_id.split('/')[1]}-arabic-text-summarizer")
+    tokenizer.push_to_hub(f"{args.model_id.split('/')[1]}-arabic-text-summarizer")
     
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Done ".encode(encoding='utf-8'))
     
