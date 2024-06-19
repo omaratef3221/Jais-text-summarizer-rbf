@@ -35,7 +35,6 @@ def main(args):
     output_dir=training_output_dir,
     save_strategy="steps",
     auto_find_batch_size=True,
-    per_device_train_batch_size=args.batch_size,
     max_steps = -1,
     num_train_epochs=args.epochs,
     save_steps=1,
