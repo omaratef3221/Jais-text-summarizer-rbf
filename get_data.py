@@ -85,9 +85,9 @@ def get_data_final():
 
 def preprocess_dataset(example):
     output_texts = []
-    for i in range(len(example['query'])):
+    for i in range(len(example['text'])):
         text = f""" 
-        قم بتلخيص النص التالي: {example["query"][i]} \n\n
+        قم بتلخيص النص التالي: {example["text"][i]} \n\n
         ###
         التلخيص: {example["summary"][i]}
         """
