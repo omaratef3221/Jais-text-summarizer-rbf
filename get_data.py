@@ -4,7 +4,7 @@ import re
 import nltk
 nltk.download('punkt')
 
-data_df = pd.read_csv("train.csv").sample(5000)
+data_df = pd.read_csv("train.csv").sample(500)
 
 counter = 0
 def delete_links(input_text):
