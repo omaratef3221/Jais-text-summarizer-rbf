@@ -11,7 +11,7 @@ import requests
 
 
 from huggingface_hub.hf_api import HfFolder
-HfFolder.save_token('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')
+HfFolder.save_token('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')
 
 def print_number_of_trainable_model_parameters(model):
     trainable_model_params = 0
