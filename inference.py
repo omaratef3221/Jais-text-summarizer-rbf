@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import pandas as pd
 import argparse
 from get_data import *
@@ -11,7 +11,7 @@ print("Test Data Shape: ", data.shape)
 
 def load_model_and_tokenizer(model_id):
     tokenizer = AutoTokenizer.from_pretrained(model_id)
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_id)
+    model = AutoModelForCausalLM.from_pretrained(model_id)
     return tokenizer, model
 
 def summarize_text(model, tokenizer, text):
