@@ -11,7 +11,7 @@ import requests
 
 
 from huggingface_hub.hf_api import HfFolder
-HfFolder.save_token('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')
+
 
 def print_number_of_trainable_model_parameters(model):
     trainable_model_params = 0
@@ -47,6 +47,7 @@ def main(args):
     push_to_hub = True,
     hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
     push_to_hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
+    hub_token = args.token,
     )
     
     response_template = """
@@ -83,5 +84,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_id", type=str)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--df_file_path", type = str, default = "train.csv")
+    parser.add_argument("--token", type=str)
     args = parser.parse_args()
+    HfFolder.save_token(args.token)
     main(args)
