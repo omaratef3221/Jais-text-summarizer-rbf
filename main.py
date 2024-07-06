@@ -1,6 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore")
-
+import torch
 import argparse
 from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig
 from transformers import TrainingArguments
@@ -80,6 +80,7 @@ def main(args):
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Done ".encode(encoding='utf-8'))
     
 if __name__ == "__main__":
+    torch.cuda.empty_cache()
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_id", type=str)
     parser.add_argument("--epochs", type=int, default=10)
