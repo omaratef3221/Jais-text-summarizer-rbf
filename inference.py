@@ -11,7 +11,9 @@ print("Test Data Shape: ", data.shape)
 
 def load_model_and_tokenizer(model_id):
     tokenizer = AutoTokenizer.from_pretrained(model_id)
-    model = AutoModelForCausalLM.from_pretrained(model_id)
+    model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", 
+                                                trust_remote_code=True, 
+                                                offload_folder="offload", torch_dtype = torch.bfloat16)
     return tokenizer, model
 
 def summarize_text(model, tokenizer, text):
