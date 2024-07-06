@@ -25,7 +25,9 @@ def print_number_of_trainable_model_parameters(model):
 
 def main(args):
     tokenizer, model  = get_model(args.model_id)
-    data = get_data_final()
+    
+    train_data = get_df(args.df_file_path)
+    data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)
     
@@ -43,8 +45,8 @@ def main(args):
     logging_steps=500,
     learning_rate=1e-4,
     push_to_hub = True,
-    hub_model_id = f"{args.model_id.split('/')[1]}-arabic-text-summarizer",
-    push_to_hub_model_id = f"{args.model_id.split('/')[1]}-arabic-text-summarizer"
+    hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
+    push_to_hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
     )
     
     response_template = """
@@ -69,8 +71,8 @@ def main(args):
     
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Training Done".encode(encoding='utf-8'))
     
-    trainer.push_to_hub(f"{args.model_id.split('/')[1]}-arabic-text-summarizer")
-    tokenizer.push_to_hub(f"{args.model_id.split('/')[1]}-arabic-text-summarizer")
+    trainer.push_to_hub(f"basic-jais-13b-arabic-text-summarizer",)
+    tokenizer.push_to_hub(f"basic-jais-13b-arabic-text-summarizer",)
     
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Model Uploaded to HuggingFace ".encode(encoding='utf-8'))
     
@@ -80,5 +82,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_id", type=str)
     parser.add_argument("--epochs", type=int, default=10)
+    parser.add_argument("--df_file_path", type = str, default = "train.csv")
     args = parser.parse_args()
     main(args)

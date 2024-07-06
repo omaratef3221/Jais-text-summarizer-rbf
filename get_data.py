@@ -4,7 +4,6 @@ import re
 import nltk
 nltk.download('punkt')
 
-data_df = pd.read_csv("train.csv").head(200)
 
 counter = 0
 def delete_links(input_text):
@@ -63,7 +62,6 @@ def stem_text(input_text):
     out_text = ' '.join(out_text)
     return out_text
 
-
 def text_prepare(input_text, ar_text):
     global counter
     counter +=1
@@ -77,11 +75,15 @@ def text_prepare(input_text, ar_text):
     #     print(counter,'\n',out_text)
     return out_text
 
+def get_df(df_path):
+    data = pd.read_csv(df_path).sample(2000)
+    data.dropna()
+    return data
 
-def get_data_final():
-    data_df['text'] = data_df['text'].apply(text_prepare, args=(True,))
-    data_df['summary'] = data_df['summary'].apply(text_prepare, args=(True,))
-    return data_df
+def get_data_final(df):
+    df['text'] = df['text'].apply(text_prepare, args=(True,))
+    df['summary'] = df['summary'].apply(text_prepare, args=(True,))
+    return df
 
 def preprocess_dataset(example):
     output_texts = []
