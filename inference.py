@@ -7,7 +7,7 @@ import time
 import requests
 
 data_df = pd.read_csv('test.csv').dropna(inplace = False)
-data_df = data_df.head(600)
+data_df = data_df.head(3) #600
 
 print("Test Data Shape: ", data_df.shape)
 
