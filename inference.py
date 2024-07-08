@@ -4,6 +4,7 @@ import pandas as pd
 import argparse
 from get_data import *
 import time
+import requests
 
 data_df = pd.read_csv('test.csv').dropna(inplace = False)
 data_df = data_df.head(600)
@@ -34,6 +35,7 @@ def main(args):
     print("Inference time taken for 600 rows was: ", round((time.time() - t), 5), " seconds", flush = True)
     
     data_df.to_csv(args.output_file_name, index=False)    
+    requests.post("https://ntfy.sh/master_experiment1", data="Inference of Experiment 1 is done ".encode(encoding='utf-8'))
     
 
 if __name__ == "__main__":
