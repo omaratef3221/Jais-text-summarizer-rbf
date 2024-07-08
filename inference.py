@@ -19,7 +19,7 @@ def load_model_and_tokenizer(model_id):
 
 def summarize_text(model, tokenizer, text):
     inputs = tokenizer.encode("قم بتلخيص النص التالي: " + text, return_tensors="pt", max_length=1024, truncation=True)
-    outputs = model.generate(inputs, max_length=1024)
+    outputs = model.generate(inputs, max_length=2048)
     summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return summary
 
