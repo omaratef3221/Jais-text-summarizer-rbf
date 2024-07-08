@@ -3,6 +3,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import pandas as pd
 import argparse
 from get_data import *
+import time
 
 data_df = pd.read_csv('test.csv').dropna(inplace = False)
 data_df = data_df.head(600)
@@ -28,10 +29,12 @@ def main(args):
     
     data_df['text'] = data_df['text'].apply(text_prepare, args=(True,))
     
-    
+    t = time.time()
     data_df["model_summary"] = data_df["text"].apply(lambda x: summarize_text(model, tokenizer, x))
+    print("Inference time taken for 600 rows was: ", round((time.time() - t), 5), " seconds")
     
     data_df.to_csv(args.output_file_name, index=False)    
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
