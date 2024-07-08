@@ -4,10 +4,10 @@ import pandas as pd
 import argparse
 from get_data import *
 
-data = pd.read_csv('test.csv').dropna(inplace = False)
-data = data.head(600)
+data_df = pd.read_csv('test.csv').dropna(inplace = False)
+data_df = data_df.head(600)
 
-print("Test Data Shape: ", data.shape)
+print("Test Data Shape: ", data_df.shape)
 
 def load_model_and_tokenizer(model_id):
     tokenizer = AutoTokenizer.from_pretrained(model_id)
