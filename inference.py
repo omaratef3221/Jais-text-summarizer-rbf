@@ -31,7 +31,7 @@ def main(args):
     
     t = time.time()
     data_df["model_summary"] = data_df["text"].apply(lambda x: summarize_text(model, tokenizer, x))
-    print("Inference time taken for 600 rows was: ", round((time.time() - t), 5), " seconds")
+    print("Inference time taken for 600 rows was: ", round((time.time() - t), 5), " seconds", flush = True)
     
     data_df.to_csv(args.output_file_name, index=False)    
     
