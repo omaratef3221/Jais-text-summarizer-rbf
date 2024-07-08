@@ -19,8 +19,13 @@ def load_model_and_tokenizer(model_id):
     return tokenizer, model
 
 def summarize_text(model, tokenizer, text):
-    inputs = tokenizer.encode("قم بتلخيص النص التالي: " + text, return_tensors="pt", max_length=1024, truncation=True).to("cuda")
-    outputs = model.generate(inputs, max_length=2048)
+    prompt = f""" 
+        قم بتلخيص النص التالي: {text} \n\n
+        ###
+        التلخيص: 
+        """
+    inputs = tokenizer.encode(prompt, return_tensors="pt", max_length=1024, truncation=True).to("cuda")
+    outputs = model.generate(inputs, max_length=100)
     summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return summary
 
