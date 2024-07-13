@@ -26,7 +26,7 @@ def print_number_of_trainable_model_parameters(model):
 def main(args):
     tokenizer, model  = get_model(args.model_id)
     
-    train_data = get_df(args.df_file_path)
+    train_data = get_df(args.df_file_path, sample_size=10000)
     data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)

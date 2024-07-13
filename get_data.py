@@ -75,8 +75,8 @@ def text_prepare(input_text, ar_text):
     #     print(counter,'\n',out_text)
     return out_text
 
-def get_df(df_path):
-    data = pd.read_csv(df_path).sample(2000)
+def get_df(df_path, sample_size = 10000):
+    data = pd.read_csv(df_path).sample(sample_size)
     data.dropna()
     return data
 
