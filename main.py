@@ -40,10 +40,10 @@ def main(args):
     if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 1)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
-        model = model.half()  # Optional: Use FP16 to save memory
-        model = model.cuda()  # Move the model to CUDA (first GPU) as a fallback if `accelerate` is not used
-
+        
         print(model)
+    model = model.half() 
+    model = model.cuda() 
     
     training_params = TrainingArguments(
     output_dir=training_output_dir,
@@ -52,9 +52,9 @@ def main(args):
     max_steps = -1,
     num_train_epochs=args.epochs,
     save_steps=1,
-    logging_steps=500,
     learning_rate=1e-4,
     push_to_hub = True,
+    logging_strategy='epochs'
     # bf16 = True,
     # hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
     # push_to_hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
