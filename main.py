@@ -83,8 +83,8 @@ def main(args):
     
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Training Done".encode(encoding='utf-8'))
     
-    trainer.push_to_hub(f"basic-jais-13b-arabic-text-summarizer",)
-    tokenizer.push_to_hub(f"basic-jais-13b-arabic-text-summarizer",)
+    # trainer.push_to_hub(f"basic-jais-13b-arabic-text-summarizer",)
+    # tokenizer.push_to_hub(f"basic-jais-13b-arabic-text-summarizer",)
     
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Model Uploaded to HuggingFace ".encode(encoding='utf-8'))
     
