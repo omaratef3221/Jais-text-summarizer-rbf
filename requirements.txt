@@ -7,4 +7,4 @@ accelerate
 datasets
 pandas 
 trl==0.9.4
-nltk
+nltk==3.8.1
