@@ -40,14 +40,12 @@ def main(args):
     if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 2)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
-        # Automatically infer the device map for the model (this works in memory)
         device_map = infer_auto_device_map(model, max_memory=None)  # max_memory can be specified if needed
 
-        # Now move the model to the inferred devices
-        model = AutoModelForCausalLM.from_config(
-            model.config,  # Use the modified in-memory model's config
-            device_map=device_map  # Automatically map to the devices
-            )
+        # model = AutoModelForCausalLM.from_config(
+        #     model.config,  
+        #     device_map=device_map 
+        #     )
         print(model)
     
     training_params = TrainingArguments(
