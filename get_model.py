@@ -11,6 +11,8 @@ torch.cuda.empty_cache()
 gc.collect()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = "mps"
+
 print("Device: ", device, " is available")
 
 
