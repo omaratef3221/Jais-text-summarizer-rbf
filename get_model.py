@@ -22,5 +22,5 @@ def get_model(model_id):
                                                 device_map="auto", 
                                                 trust_remote_code=True, 
                                                 offload_folder="offload", 
-                                                torch_dtype = torch.bfloat16)
+                                                torch_dtype = torch.float16)
     return tokenizer, model
