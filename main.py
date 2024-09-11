@@ -48,6 +48,8 @@ def main(args):
         #     model.config,  
         #     device_map=device_map 
         #     )
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model.to(device)
         print(model)
     
     training_params = TrainingArguments(
