@@ -41,9 +41,16 @@ def main(args):
         replace_ffn_with_rbf_jais(model, 1)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
         
-        device_map = infer_auto_device_map(model)
+
+        # Generate the device map automatically
+        device_map = infer_auto_device_map(model, max_memory={0: "40GiB", 1: "40GiB"}, no_split_module_classes=["JAISBlock"])
+
+        # Check the inferred device map
+        print(device_map)
+
+        # Use the inferred device map to parallelize the model
         model.parallelize(device_map)
-        
+
         print(model)
     
     training_params = TrainingArguments(
