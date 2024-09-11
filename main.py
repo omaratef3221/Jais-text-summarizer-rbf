@@ -43,7 +43,7 @@ def main(args):
         
 
         # Generate the device map automatically
-        device_map = infer_auto_device_map(model, max_memory={0: "40GiB", 1: "40GiB"}, no_split_module_classes=["JAISBlock"])
+        device_map = infer_auto_device_map(model, max_memory={0: "80GiB", 1: "80GiB"}, no_split_module_classes=["JAISBlock"])
 
         # Check the inferred device map
         print(device_map)
