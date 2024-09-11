@@ -8,10 +8,9 @@ from get_model import *
 from get_data import *
 import time
 import requests
-
-
+from add_rbf_to_model import replace_ffn_with_rbf_jais
 from huggingface_hub.hf_api import HfFolder
-
+from inference import *
 
 def print_number_of_trainable_model_parameters(model):
     trainable_model_params = 0
@@ -33,7 +32,10 @@ def main(args):
     
     training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
-    print("Number of parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
+    print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
+    if args.EnableRBF:
+        model = replace_ffn_with_rbf_jais(model, 2)
+    print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
     
     training_params = TrainingArguments(
     output_dir=training_output_dir,
@@ -79,13 +81,18 @@ def main(args):
     
     requests.post("https://ntfy.sh/master_experiment1", data="Experiment 1 Done ".encode(encoding='utf-8'))
     
+    print("Testing the model on test dataset starting....", flush=True)
+    test_model_on_dataset(tokenizer, model)
+    
 if __name__ == "__main__":
     torch.cuda.empty_cache()
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_id", type=str)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--df_file_path", type = str, default = "train.csv")
+    parser.add_argument("--EnableRBF", type=bool, default=True)
     # parser.add_argument("--token", type=str)
     args = parser.parse_args()
     # HfFolder.save_token(args.token)
     main(args)
+    
