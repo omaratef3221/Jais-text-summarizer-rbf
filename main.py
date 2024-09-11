@@ -33,7 +33,7 @@ def main(args):
     training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
     print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
-    if args.EnableRBF:
+    if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 2)
     print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
     
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_id", type=str)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--df_file_path", type = str, default = "train.csv")
-    parser.add_argument("--EnableRBF", type=bool, default=True)
+    parser.add_argument("--EnableRBF", type=str, default="rbf")
     # parser.add_argument("--token", type=str)
     args = parser.parse_args()
     # HfFolder.save_token(args.token)
