@@ -40,14 +40,10 @@ def main(args):
     if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 1)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
-        # device_map = infer_auto_device_map(model)  # max_memory can be specified if needed
-        # model.parallelize(device_map)
-
-
-        # model = AutoModelForCausalLM.from_config(
-        #     model.config,  
-        #     device_map=device_map 
-        #     )
+        
+        device_map = infer_auto_device_map(model)
+        model.parallelize(device_map)
+        
         print(model)
     
     training_params = TrainingArguments(
