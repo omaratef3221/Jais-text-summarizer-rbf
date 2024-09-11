@@ -42,8 +42,8 @@ def main(args):
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
         
         print(model)
-    model = model.half() 
-    model = model.cuda() 
+    # model = model.half() 
+    # model = model.cuda() 
     
     training_params = TrainingArguments(
     output_dir=training_output_dir,
