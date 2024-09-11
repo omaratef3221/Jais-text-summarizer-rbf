@@ -35,7 +35,7 @@ def main(args):
     print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
     if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 2)
-    print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
+        print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
     
     training_params = TrainingArguments(
     output_dir=training_output_dir,
@@ -47,7 +47,7 @@ def main(args):
     logging_steps=500,
     learning_rate=1e-4,
     push_to_hub = True,
-    bf16 = True,
+    fp16 = True,
     hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
     push_to_hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
     # hub_token = args.token,
