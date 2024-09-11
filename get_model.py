@@ -21,7 +21,7 @@ def get_model(model_id):
 
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     model = AutoModelForCausalLM.from_pretrained(model_path, 
-                                                device_map="auto", 
+                                                device_map="balanced", 
                                                 trust_remote_code=True, 
                                                 offload_folder="offload", 
                                                 # torch_dtype = torch.bfloat16
