@@ -38,7 +38,7 @@ def main(args):
 
     print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
     if args.EnableRBF == "rbf":
-        replace_ffn_with_rbf_jais(model, 2)
+        replace_ffn_with_rbf_jais(model, 1)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
         # device_map = infer_auto_device_map(model)  # max_memory can be specified if needed
         # model.parallelize(device_map)
