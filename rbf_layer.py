@@ -77,17 +77,14 @@ class RBFLayer(nn.Module):
         batch_size = input.size(0)
         sequence_length = input.size(1)
 
-        # Expand centers to match the batch and sequence length
-        c = self.kernels_centers.expand(batch_size, sequence_length, self.num_kernels, self.in_features_dim)
-
-        # Compute differences between input and centers
-        diff = input.unsqueeze(2) - c  # Shape: [batch_size, sequence_length, num_kernels, in_features_dim]
+        # Compute differences between input and centers efficiently
+        diff = input.unsqueeze(2) - self.kernels_centers  # Shape: [batch_size, sequence_length, num_kernels, in_features_dim]
 
         # Apply norm function to get distances
         r = self.norm_function(diff)  # Shape: [batch_size, sequence_length, num_kernels]
 
         # Apply shape parameters (log_shapes) to the distances
-        eps_r = self.log_shapes.exp().unsqueeze(0).unsqueeze(0) * r
+        eps_r = torch.exp(self.log_shapes).unsqueeze(0).unsqueeze(0) * r
 
         # Apply radial basis function (e.g., Gaussian)
         rbfs = self.radial_function(eps_r)
@@ -96,6 +93,6 @@ class RBFLayer(nn.Module):
             rbfs = rbfs / (1e-9 + rbfs.sum(dim=-1, keepdim=True))
 
         # Combine RBF outputs using the weights
-        out = (self.weights.unsqueeze(0).unsqueeze(0) * rbfs.unsqueeze(2)).sum(dim=-1)
+        out = torch.matmul(rbfs, self.weights.T)  # More efficient matrix multiplication
 
         return out
