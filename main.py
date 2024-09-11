@@ -54,7 +54,7 @@ def main(args):
     save_steps=1,
     learning_rate=1e-4,
     push_to_hub = True,
-    logging_strategy='epochs'
+    logging_strategy='epoch'
     # bf16 = True,
     # hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
     # push_to_hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
