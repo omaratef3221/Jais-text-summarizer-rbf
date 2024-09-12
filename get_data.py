@@ -77,7 +77,14 @@ def text_prepare(input_text, ar_text):
     return out_text
 
 def get_df(df_path, sample_size = 10000):
-    data = pd.read_csv(df_path).sample(sample_size)
+    data = pd.read_csv(df_path)
+    
+    data["word_count"] = data["text"].apply(lambda x: len(x.split()))
+    data = data[(data["word_count"] > 100) & (data["word_count"] < 1000)]
+    data = data.sort_values(by="word_count", ascending=True)
+    data = data.drop(columns=["word_count"])
+    
+    data = data.head(sample_size)
     data.dropna()
     return data
 

@@ -30,11 +30,11 @@ def main(args):
     tokenizer, model  = get_model(args.model_id)
     
     def preprocess_dataset(example):
-        example["input_ids"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 1400, truncation=True, return_tensors="pt").input_ids
-        example["labels"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 1400, truncation=True, return_tensors="pt").input_ids
+        example["input_ids"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 500, truncation=True, return_tensors="pt").input_ids
+        example["labels"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 500, truncation=True, return_tensors="pt").input_ids
         return example
     
-    train_data = get_df(args.df_file_path, sample_size=10000)
+    train_data = get_df(args.df_file_path, sample_size=12000)
     data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)
@@ -58,7 +58,7 @@ def main(args):
     # Prepare training arguments
     training_params = TrainingArguments(
         output_dir=training_output_dir,
-        save_strategy="steps",
+        save_strategy="epoch",
         auto_find_batch_size=True,
         max_steps=-1,
         num_train_epochs=args.epochs,
