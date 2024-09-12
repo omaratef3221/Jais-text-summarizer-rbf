@@ -64,7 +64,7 @@ def main(args):
     num_train_epochs=args.epochs,
     save_steps=1,
     learning_rate=1e-4,
-    logging_strategy='epoch'
+    logging_strategy='epoch',
     bf16 = True,
     )
     
