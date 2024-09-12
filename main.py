@@ -33,7 +33,10 @@ def main(args):
     data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)
-    
+    data = data.map(
+        lambda x: tokenizer(x["text"], truncation=True, padding="max_length"),
+        batched=True,
+    )
     training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
     print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
@@ -47,32 +50,31 @@ def main(args):
     
     # Define the data collator for seq2seq
     collator = DataCollatorForSeq2Seq(
-            tokenizer=tokenizer,
-            model=model,
-            padding="longest",  # Dynamically pad to the longest sequence in the batch
-            return_tensors="pt"
-        )
-
-
-    train_dataset = data.map(preprocess_dataset, batched=True, fn_kwargs={"tokenizer": tokenizer})
-
-    training_params = TrainingArguments(
-    output_dir=training_output_dir,
-    save_strategy="steps",
-    auto_find_batch_size=True,
-    max_steps = -1,
-    num_train_epochs=args.epochs,
-    save_steps=1,
-    learning_rate=1e-4,
-    logging_strategy='epoch',
-    bf16 = True,
+        tokenizer=tokenizer,
+        model=model,
+        padding="longest",  # Automatically pads inputs to the longest sequence in the batch
+        max_length=1024,  # Specify max length if needed
+        return_tensors="pt"
     )
-    
+
+    # Prepare training arguments
+    training_params = TrainingArguments(
+        output_dir=training_output_dir,
+        save_strategy="steps",
+        auto_find_batch_size=True,
+        max_steps=-1,
+        num_train_epochs=args.epochs,
+        save_steps=1,
+        learning_rate=1e-4,
+        logging_strategy='epoch',
+        bf16=True,
+    )
+
     # Initialize the Trainer
     trainer = Trainer(
         model=model,
         args=training_params,
-        train_dataset=train_dataset,
+        train_dataset=data,
         data_collator=collator,
         tokenizer=tokenizer,
     )

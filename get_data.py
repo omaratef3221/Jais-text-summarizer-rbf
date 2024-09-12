@@ -86,7 +86,7 @@ def get_data_final(df):
     df['summary'] = df['summary'].apply(text_prepare, args=(True,))
     return df
 
-def preprocess_dataset(examples, tokenizer):
+def preprocess_dataset(examples, tokenizer, max_input_length=1024, max_label_length=128):
     input_texts = []
     output_texts = []
     
@@ -103,7 +103,7 @@ def preprocess_dataset(examples, tokenizer):
     # Tokenize the inputs and labels separately, applying truncation and max_length
     inputs = tokenizer(
         input_texts, 
-        max_length=1024, 
+        max_length=max_input_length, 
         padding="max_length", 
         truncation=True, 
         return_tensors="pt"
@@ -111,18 +111,25 @@ def preprocess_dataset(examples, tokenizer):
     
     labels = tokenizer(
         output_texts, 
-        max_length=50,  # Adjust based on your task
+        max_length=max_label_length, 
         padding="max_length", 
         truncation=True, 
         return_tensors="pt"
     )
 
-    # Replace padding token IDs in labels with -100 to ignore during loss computation
-    labels["input_ids"] = labels["input_ids"].masked_fill(labels["input_ids"] == tokenizer.pad_token_id, -100)
+    # Ensure the input and label batch sizes are the same
+    batch_size = inputs["input_ids"].size(0)
 
-    # Ensure inputs and labels are returned with correct dimensions
+    # Replace padding token IDs in labels with -100 to ignore during loss computation
+    labels["input_ids"] = torch.where(
+        labels["input_ids"] == tokenizer.pad_token_id, 
+        torch.tensor(-100), 
+        labels["input_ids"]
+    )
+
     return {
         "input_ids": inputs["input_ids"],
         "attention_mask": inputs["attention_mask"],
         "labels": labels["input_ids"]
     }
+
