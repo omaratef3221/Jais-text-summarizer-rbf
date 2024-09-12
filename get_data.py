@@ -81,55 +81,27 @@ def get_df(df_path, sample_size = 10000):
     data.dropna()
     return data
 
+def fill_text_summary(text, summary):
+    full_prompt = f"""
+    قم بتلخيص النص التالي: 
+    \n 
+    {text}
+    ملخص النص هو: 
+    \n
+    {summary}
+    """
+    return full_prompt 
+    
+
 def get_data_final(df):
     df['text'] = df['text'].apply(text_prepare, args=(True,))
     df['summary'] = df['summary'].apply(text_prepare, args=(True,))
-    return df
-
-def preprocess_dataset(examples, tokenizer, max_input_length=1024, max_label_length=128):
-    input_texts = []
-    output_texts = []
     
-    # Iterate over the input and summary (label) texts
-    for i in range(len(examples['text'])):
-        # Prepare the input text by adding the task-specific prompt
-        input_text = f"قم بتلخيص النص التالي: {examples['text'][i]} \n\n"
-        # The expected output text (i.e., the summary)
-        output_text = f"التلخيص: {examples['summary'][i]}"
-        
-        input_texts.append(input_text)
-        output_texts.append(output_text)
+    df["full_prompt"] = df.apply(lambda x: fill_text_summary(x['text'], x['summary']), axis=1)
+    return df[["full_prompt"]]
 
-    # Tokenize the inputs and labels separately, applying truncation and max_length
-    inputs = tokenizer(
-        input_texts, 
-        max_length=max_input_length, 
-        padding="max_length", 
-        truncation=True, 
-        return_tensors="pt"
-    )
-    
-    labels = tokenizer(
-        output_texts, 
-        max_length=max_label_length, 
-        padding="max_length", 
-        truncation=True, 
-        return_tensors="pt"
-    )
-
-    # Ensure the input and label batch sizes are the same
-    batch_size = inputs["input_ids"].size(0)
-
-    # Replace padding token IDs in labels with -100 to ignore during loss computation
-    labels["input_ids"] = torch.where(
-        labels["input_ids"] == tokenizer.pad_token_id, 
-        torch.tensor(-100), 
-        labels["input_ids"]
-    )
-
-    return {
-        "input_ids": inputs["input_ids"],
-        "attention_mask": inputs["attention_mask"],
-        "labels": labels["input_ids"]
-    }
+def preprocess_dataset(example, tokenizer, max_input_length=1024, max_label_length=128):
+    example["input_ids"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 1400, truncation=True, return_tensors="pt").input_ids
+    example["labels"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 1400, truncation=True, return_tensors="pt").input_ids
+    return example
 

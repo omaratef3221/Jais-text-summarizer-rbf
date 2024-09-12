@@ -33,10 +33,8 @@ def main(args):
     data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)
-    data = data.map(
-        lambda x: tokenizer(x["text"], truncation=True, padding="max_length"),
-        batched=True,
-    )
+    data = train_data.map(preprocess_dataset, batched=True, remove_columns=data.column_names)
+    
     training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
     print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
@@ -48,14 +46,7 @@ def main(args):
     # model = model.half() 
     # model = model.cuda() 
     
-    # Define the data collator for seq2seq
-    collator = DataCollatorForSeq2Seq(
-        tokenizer=tokenizer,
-        model=model,
-        padding="longest",  # Automatically pads inputs to the longest sequence in the batch
-        max_length=1024,  # Specify max length if needed
-        return_tensors="pt"
-    )
+
 
     # Prepare training arguments
     training_params = TrainingArguments(
@@ -75,7 +66,6 @@ def main(args):
         model=model,
         args=training_params,
         train_dataset=data,
-        data_collator=collator,
         tokenizer=tokenizer,
     )
 
