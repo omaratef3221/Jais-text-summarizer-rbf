@@ -47,12 +47,12 @@ def main(args):
     
     # Define the data collator for seq2seq
     collator = DataCollatorForSeq2Seq(
-        tokenizer=tokenizer,
-        model=model,
-        padding=True,  # Automatically pads inputs to the same length in the batch
-        max_length=1024,  # Specify max length if needed
-        return_tensors="pt"
-    )
+            tokenizer=tokenizer,
+            model=model,
+            padding="longest",  # Dynamically pad to the longest sequence in the batch
+            return_tensors="pt"
+        )
+
 
     train_dataset = data.map(preprocess_dataset, batched=True, fn_kwargs={"tokenizer": tokenizer})
 

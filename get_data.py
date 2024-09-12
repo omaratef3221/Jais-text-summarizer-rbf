@@ -111,20 +111,18 @@ def preprocess_dataset(examples, tokenizer):
     
     labels = tokenizer(
         output_texts, 
-        max_length=50, 
+        max_length=50,  # Adjust based on your task
         padding="max_length", 
         truncation=True, 
         return_tensors="pt"
     )
 
     # Replace padding token IDs in labels with -100 to ignore during loss computation
-    labels["input_ids"] = [
-        [(label if label != tokenizer.pad_token_id else -100) for label in labels_seq] 
-        for labels_seq in labels["input_ids"]
-    ]
+    labels["input_ids"] = labels["input_ids"].masked_fill(labels["input_ids"] == tokenizer.pad_token_id, -100)
 
+    # Ensure inputs and labels are returned with correct dimensions
     return {
         "input_ids": inputs["input_ids"],
         "attention_mask": inputs["attention_mask"],
-        "labels": torch.tensor(labels["input_ids"])
+        "labels": labels["input_ids"]
     }
