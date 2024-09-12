@@ -73,11 +73,15 @@ class RBFLayer(nn.Module):
         Computes the output of the RBF layer given an input tensor.
         Input has size [batch_size, sequence_length, in_features].
         """
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        input.to(device)
+        device = input.device  # Get the device of the input tensor
+        
         batch_size = input.size(0)
         sequence_length = input.size(1)
+        
+        self.kernels_centers = self.kernels_centers.to(device)
+        self.log_shapes = self.log_shapes.to(device)
+        self.weights = self.weights.to(device)
+
 
         # Expand centers to match the batch and sequence length
         c = self.kernels_centers.expand(batch_size, sequence_length, self.num_kernels, self.in_features_dim)
@@ -86,7 +90,7 @@ class RBFLayer(nn.Module):
         diff = input.unsqueeze(2) - c  # Shape: [batch_size, sequence_length, num_kernels, in_features_dim]
 
         # Apply norm function to get distances
-        r = self.norm_function(diff)  # Shape: [batch_size, sequence_length, num_kernels]
+        r = self.norm_function(diff).to(device)  # Shape: [batch_size, sequence_length, num_kernels]
 
         # Apply shape parameters (log_shapes) to the distances
         eps_r = self.log_shapes.exp().unsqueeze(0).unsqueeze(0) * r
