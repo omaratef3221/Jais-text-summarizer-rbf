@@ -100,8 +100,4 @@ def get_data_final(df):
     df["full_prompt"] = df.apply(lambda x: fill_text_summary(x['text'], x['summary']), axis=1)
     return df[["full_prompt"]]
 
-def preprocess_dataset(example, tokenizer):
-    example["input_ids"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 1400, truncation=True, return_tensors="pt").input_ids
-    example["labels"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 1400, truncation=True, return_tensors="pt").input_ids
-    return example
 
