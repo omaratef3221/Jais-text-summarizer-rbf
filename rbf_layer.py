@@ -73,7 +73,7 @@ class RBFLayer(nn.Module):
         Computes the output of the RBF layer given an input tensor.
         Input has size [batch_size, sequence_length, in_features].
         """
-
+        input.to(self.kernels_centers.device)
         batch_size = input.size(0)
         sequence_length = input.size(1)
 

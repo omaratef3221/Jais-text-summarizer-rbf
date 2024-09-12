@@ -31,7 +31,7 @@ def test_model_on_dataset(tokenizer, model):
     
     t = time.time()
     data_df["model_summary"] = data_df["text"].apply(lambda x: summarize_text(model, tokenizer, x))
-    print("Inference time taken for 500 rows was: ", round((time.time() - t), 5), " seconds", flush = True)
+    print("Inference time taken for 100 rows was: ", round((time.time() - t), 5), " seconds", flush = True)
     
     data_df.to_csv("Testing_Results.csv", index=False)    
     requests.post("https://ntfy.sh/master_experiment1", data="Inference of Experiment 1 is done ".encode(encoding='utf-8'))
