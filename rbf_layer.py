@@ -74,13 +74,15 @@ class RBFLayer(nn.Module):
         Input has size [batch_size, sequence_length, in_features].
         """
         device = input.device  # Get the device of the input tensor
-        
-        batch_size = input.size(0)
-        sequence_length = input.size(1)
-        
         self.kernels_centers = self.kernels_centers.to(device)
         self.log_shapes = self.log_shapes.to(device)
         self.weights = self.weights.to(device)
+        
+        print("INPUT DEVICE IS:: ", device)
+        batch_size = input.size(0)
+        sequence_length = input.size(1)
+        
+        
 
 
         # Expand centers to match the batch and sequence length
