@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 import re 
+import torch
 import nltk
 nltk.download('punkt')
 
@@ -85,13 +86,45 @@ def get_data_final(df):
     df['summary'] = df['summary'].apply(text_prepare, args=(True,))
     return df
 
-def preprocess_dataset(example):
+def preprocess_dataset(examples, tokenizer):
+    input_texts = []
     output_texts = []
-    for i in range(len(example['text'])):
-        text = f""" 
-        قم بتلخيص النص التالي: {example["text"][i]} \n\n
-        ###
-        التلخيص: {example["summary"][i]}
-        """
-        output_texts.append(text)
-    return output_texts
+    
+    # Iterate over the input and summary (label) texts
+    for i in range(len(examples['text'])):
+        # Prepare the input text by adding the task-specific prompt
+        input_text = f"قم بتلخيص النص التالي: {examples['text'][i]} \n\n"
+        # The expected output text (i.e., the summary)
+        output_text = f"التلخيص: {examples['summary'][i]}"
+        
+        input_texts.append(input_text)
+        output_texts.append(output_text)
+
+    # Tokenize the inputs and labels separately, applying truncation and max_length
+    inputs = tokenizer(
+        input_texts, 
+        max_length=1024, 
+        padding="max_length", 
+        truncation=True, 
+        return_tensors="pt"
+    )
+    
+    labels = tokenizer(
+        output_texts, 
+        max_length=50, 
+        padding="max_length", 
+        truncation=True, 
+        return_tensors="pt"
+    )
+
+    # Replace padding token IDs in labels with -100 to ignore during loss computation
+    labels["input_ids"] = [
+        [(label if label != tokenizer.pad_token_id else -100) for label in labels_seq] 
+        for labels_seq in labels["input_ids"]
+    ]
+
+    return {
+        "input_ids": inputs["input_ids"],
+        "attention_mask": inputs["attention_mask"],
+        "labels": torch.tensor(labels["input_ids"])
+    }

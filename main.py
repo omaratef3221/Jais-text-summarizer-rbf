@@ -3,7 +3,7 @@ warnings.filterwarnings("ignore")
 import torch
 import argparse
 from trl import SFTTrainer, DataCollatorForCompletionOnlyLM, SFTConfig
-from transformers import TrainingArguments
+from transformers import TrainingArguments, DataCollatorForSeq2Seq
 from get_model import *
 from get_data import *
 import time
@@ -45,6 +45,17 @@ def main(args):
     # model = model.half() 
     # model = model.cuda() 
     
+    # Define the data collator for seq2seq
+    collator = DataCollatorForSeq2Seq(
+        tokenizer=tokenizer,
+        model=model,
+        padding=True,  # Automatically pads inputs to the same length in the batch
+        max_length=1024,  # Specify max length if needed
+        return_tensors="pt"
+    )
+
+    train_dataset = data["train"].map(preprocess_dataset, batched=True)
+
     training_params = TrainingArguments(
     output_dir=training_output_dir,
     save_strategy="steps",
@@ -53,27 +64,21 @@ def main(args):
     num_train_epochs=args.epochs,
     save_steps=1,
     learning_rate=1e-4,
-    # push_to_hub = True,
     logging_strategy='epoch'
-    # bf16 = True,
-    # hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
-    # push_to_hub_model_id = f"basic-jais-13b-arabic-text-summarizer",
-    # hub_token = args.token,
+    bf16 = True,
     )
     
-    response_template = """
-    ###
-        التلخيص:   
-        """
-    collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenizer)
-    
-    
-    trainer = SFTTrainer(
-    model,
-    train_dataset=data,
-    formatting_func=preprocess_dataset,
-    data_collator=collator,
+    # Initialize the Trainer
+    trainer = Trainer(
+        model=model,
+        args=training_params,
+        train_dataset=train_dataset,
+        data_collator=collator,
+        tokenizer=tokenizer,
     )
+
+    # Start training
+    trainer.train()
     
     t1 = time.time()
     trainer.train()
