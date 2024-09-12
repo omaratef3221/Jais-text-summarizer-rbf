@@ -78,7 +78,6 @@ class RBFLayer(nn.Module):
         self.log_shapes.data = self.log_shapes.data.to(device)
         self.weights.data = self.weights.data.to(device)
         
-        print("INPUT DEVICE IS:: ", device)
         batch_size = input.size(0)
         sequence_length = input.size(1)
         
