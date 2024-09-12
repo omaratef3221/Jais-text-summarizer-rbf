@@ -9,11 +9,13 @@ import requests
 
 
 def summarize_text(model, tokenizer, text):
-    prompt = f""" 
-        قم بتلخيص النص التالي: {text} \n\n
-        ###
-        التلخيص: 
-        """
+    prompt = f"""
+    قم بتلخيص النص التالي: 
+    \n 
+    {text}
+    ملخص النص هو: 
+    \n
+    """
     inputs = tokenizer.encode(prompt, return_tensors="pt", max_length=400, truncation=True).to("cuda")
     outputs = model.generate(inputs, max_length=500)
     summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
