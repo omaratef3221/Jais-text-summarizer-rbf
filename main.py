@@ -33,7 +33,7 @@ def main(args):
     data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)
-    data = train_data.map(preprocess_dataset, batched=True, remove_columns=data.column_names)
+    data = train_data.map(preprocess_dataset, tokenizer = tokenizer, batched=True, remove_columns=data.column_names)
     
     training_output_dir = f'./JAIS_original_training-{str(int(time.time()))}'
 
