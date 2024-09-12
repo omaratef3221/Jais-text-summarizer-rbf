@@ -38,7 +38,7 @@ def main(args):
     data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)
-    data = train_data.map(preprocess_dataset, batched=True, remove_columns=data.column_names)
+    data = data.map(preprocess_dataset, batched=True, remove_columns=data.column_names)
     
     
 
