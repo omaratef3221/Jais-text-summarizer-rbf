@@ -54,7 +54,7 @@ def main(args):
         return_tensors="pt"
     )
 
-    train_dataset = data.map(preprocess_dataset, batched=True)
+    train_dataset = data.map(preprocess_dataset, batched=True, fn_kwargs={"tokenizer": tokenizer})
 
     training_params = TrainingArguments(
     output_dir=training_output_dir,
