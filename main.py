@@ -75,9 +75,6 @@ def main(args):
         train_dataset=data,
         tokenizer=tokenizer,
     )
-
-    # Start training
-    trainer.train()
     
     t1 = time.time()
     trainer.train()
