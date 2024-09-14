@@ -45,19 +45,19 @@ class RBFLayer(nn.Module):
         if self.constant_weights_parameters:
             self.weights = nn.Parameter(self.initial_weights_parameters, requires_grad=False)
         else:
-            self.weights = nn.Parameter(torch.zeros(self.out_features_dim, self.num_kernels, dtype=torch.float32))
+            self.weights = nn.Parameter(torch.zeros(self.out_features_dim, self.num_kernels, dtype=torch.bfloat16))
 
         # Initialize kernels' centers
         if self.constant_centers_parameter:
             self.kernels_centers = nn.Parameter(self.initial_centers_parameter, requires_grad=False)
         else:
-            self.kernels_centers = nn.Parameter(torch.zeros(self.num_kernels, self.in_features_dim, dtype=torch.float32))
+            self.kernels_centers = nn.Parameter(torch.zeros(self.num_kernels, self.in_features_dim, dtype=torch.bfloat16))
 
         # Initialize shape parameter
         if self.constant_shape_parameter:
             self.log_shapes = nn.Parameter(self.initial_shape_parameter, requires_grad=False)
         else:
-            self.log_shapes = nn.Parameter(torch.zeros(self.num_kernels, dtype=torch.float32))
+            self.log_shapes = nn.Parameter(torch.zeros(self.num_kernels, dtype=torch.bfloat16))
     
         # device = "cuda:0" if torch.cuda.is_available() else "cpu"
         # self.kernels_centers.data = self.kernels_centers.data.to(device)
