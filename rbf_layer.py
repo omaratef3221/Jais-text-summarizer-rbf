@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from typing import Callable
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+# device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class RBFLayer(nn.Module):
     def __init__(self,
@@ -61,9 +61,9 @@ class RBFLayer(nn.Module):
             self.log_shapes = nn.Parameter(torch.zeros(self.num_kernels, dtype=torch.bfloat16))
             
         
-        self.kernels_centers.data = self.kernels_centers.data.to(device)
-        self.log_shapes.data = self.log_shapes.data.to(device)
-        self.weights.data = self.weights.data.to(device)
+        # self.kernels_centers.data = self.kernels_centers.data.to(device)
+        # self.log_shapes.data = self.log_shapes.data.to(device)
+        # self.weights.data = self.weights.data.to(device)
         
         self.reset()
 
@@ -96,7 +96,7 @@ class RBFLayer(nn.Module):
         
         
         # Apply norm function to get distances
-        r = self.norm_function(diff).to(device)
+        r = self.norm_function(diff)
         #  # Shape: [batch_size, sequence_length, num_kernels]
 
         # Apply shape parameters (log_shapes) to the distances
