@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from typing import Callable
 
-
+device = "cuda" if torch.cuda.is_available() else "cpu"
 class RBFLayer(nn.Module):
     def __init__(self,
                  in_features_dim: int,
@@ -26,6 +26,8 @@ class RBFLayer(nn.Module):
         self.norm_function = norm_function
         self.normalization = normalization
 
+        self.norm_function.to(device)
+        
         self.initial_shape_parameter = initial_shape_parameter
         self.constant_shape_parameter = constant_shape_parameter
 
@@ -34,6 +36,8 @@ class RBFLayer(nn.Module):
 
         self.initial_weights_parameters = initial_weights_parameters
         self.constant_weights_parameters = constant_weights_parameters
+        
+        
 
         self._make_parameters()
 
@@ -56,6 +60,10 @@ class RBFLayer(nn.Module):
         else:
             self.log_shapes = nn.Parameter(torch.zeros(self.num_kernels, dtype=torch.float32))
 
+        self.kernels_centers.data = self.kernels_centers.data.to(device)
+        self.log_shapes.data = self.log_shapes.data.to(device)
+        self.weights.data = self.weights.data.to(device)
+        
         self.reset()
 
     def reset(self, upper_bound_kernels: float = 1.0, std_shapes: float = 0.1, gain_weights: float = 1.0) -> None:
@@ -73,10 +81,7 @@ class RBFLayer(nn.Module):
         Computes the output of the RBF layer given an input tensor.
         Input has size [batch_size, sequence_length, in_features].
         """
-        device = input.device  # Get the device of the input tensor
-        self.kernels_centers.data = self.kernels_centers.data.to(device)
-        self.log_shapes.data = self.log_shapes.data.to(device)
-        self.weights.data = self.weights.data.to(device)
+        
         
         batch_size = input.size(0)
         sequence_length = input.size(1)
@@ -91,7 +96,7 @@ class RBFLayer(nn.Module):
         diff = input.unsqueeze(2) - c  # Shape: [batch_size, sequence_length, num_kernels, in_features_dim]
 
         # Apply norm function to get distances
-        r = self.norm_function(diff).to(device)  # Shape: [batch_size, sequence_length, num_kernels]
+        r = self.norm_function(diff)  # Shape: [batch_size, sequence_length, num_kernels]
 
         # Apply shape parameters (log_shapes) to the distances
         eps_r = self.log_shapes.exp().unsqueeze(0).unsqueeze(0) * r
