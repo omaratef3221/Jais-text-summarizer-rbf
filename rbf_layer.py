@@ -84,10 +84,10 @@ class RBFLayer(nn.Module):
         
         batch_size = input.size(0)
         sequence_length = input.size(1)
-        device = input.device
-        self.kernels_centers.data = self.kernels_centers.data.to(device)
-        self.log_shapes.data = self.log_shapes.data.to(device)
-        self.weights.data = self.weights.data.to(device)
+        # device = input.device
+        # self.kernels_centers.data = self.kernels_centers.data.to(device)
+        # self.log_shapes.data = self.log_shapes.data.to(device)
+        # self.weights.data = self.weights.data.to(device)
 
         # Expand centers to match the batch and sequence length
         c = self.kernels_centers.expand(batch_size, sequence_length, self.num_kernels, self.in_features_dim)
@@ -98,7 +98,8 @@ class RBFLayer(nn.Module):
         
         
         # Apply norm function to get distances
-        r = self.norm_function(diff).to(device) # Shape: [batch_size, sequence_length, num_kernels]
+        r = self.norm_function(diff)
+        # .to(device) # Shape: [batch_size, sequence_length, num_kernels]
 
         # Apply shape parameters (log_shapes) to the distances
         eps_r = self.log_shapes.exp().unsqueeze(0).unsqueeze(0) * r
