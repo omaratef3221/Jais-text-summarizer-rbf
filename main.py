@@ -14,7 +14,7 @@ from inference import *
 from accelerate import infer_auto_device_map
 from transformers import AutoModelForCausalLM
 import torch
-
+from torch import nn
 
 def print_number_of_trainable_model_parameters(model):
     trainable_model_params = 0
@@ -48,8 +48,12 @@ def main(args):
     if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 1)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
-        
+        model = model.to('cuda:0')
+        model = nn.DataParallel(model)
+
         print(model)
+        
+        
     # model = model.half() 
     # model = model.cuda() 
     
