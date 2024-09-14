@@ -58,8 +58,10 @@ class RBFLayer(nn.Module):
             self.log_shapes = nn.Parameter(self.initial_shape_parameter, requires_grad=False)
         else:
             self.log_shapes = nn.Parameter(torch.zeros(self.num_kernels, dtype=torch.float32))
-
-        
+    
+        # self.kernels_centers.data = self.kernels_centers.data.to(device)
+        # self.log_shapes.data = self.log_shapes.data.to(device)
+        # self.weights.data = self.weights.data.to(device)
         self.reset()
 
     def reset(self, upper_bound_kernels: float = 1.0, std_shapes: float = 0.1, gain_weights: float = 1.0) -> None:

@@ -48,8 +48,8 @@ def main(args):
     if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 1)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
-        model = model.to('cuda:0')
-        model = nn.DataParallel(model)
+        
+        model = torch.nn.DataParallel(model)  # Wrap the model for multi-GPU
 
         print(model)
         
