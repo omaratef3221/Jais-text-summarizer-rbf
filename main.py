@@ -11,7 +11,7 @@ import requests
 from add_rbf_to_model import replace_ffn_with_rbf_jais
 from huggingface_hub.hf_api import HfFolder
 from inference import *
-from accelerate import infer_auto_device_map
+from accelerate import infer_auto_device_map, dispatch_model
 from transformers import AutoModelForCausalLM
 import torch
 from torch import nn
@@ -48,7 +48,11 @@ def main(args):
     if args.EnableRBF == "rbf":
         replace_ffn_with_rbf_jais(model, 1)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
-        model.device_map = "auto"
+        # Infer the device map again after modification
+        device_map = infer_auto_device_map(model, max_memory=None, no_split_module_classes=["CustomRBFFeedForward", "SomeOtherClass"])
+
+        # Re-dispatch the model with the new device map to distribute the model across GPUs
+        dispatch_model(model, device_map=device_map)
         print(model)
         
         
