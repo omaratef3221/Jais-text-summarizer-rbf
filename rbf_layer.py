@@ -58,11 +58,6 @@ class RBFLayer(nn.Module):
             self.log_shapes = nn.Parameter(self.initial_shape_parameter, requires_grad=False)
         else:
             self.log_shapes = nn.Parameter(torch.zeros(self.num_kernels, dtype=torch.bfloat16))
-    
-        # device = "cuda:0" if torch.cuda.is_available() else "cpu"
-        # self.kernels_centers.data = self.kernels_centers.data.to(device)
-        # self.log_shapes.data = self.log_shapes.data.to(device)
-        # self.weights.data = self.weights.data.to(device)
         self.reset()
 
     def reset(self, upper_bound_kernels: float = 1.0, std_shapes: float = 0.1, gain_weights: float = 1.0) -> None:
@@ -80,16 +75,12 @@ class RBFLayer(nn.Module):
         Computes the output of the RBF layer given an input tensor.
         Input has size [batch_size, sequence_length, in_features].
         """
+        batch_size = input.size(0)
+        sequence_length = input.size(1)
         device = input.device
         self.kernels_centers.data = self.kernels_centers.data.to(device)
         self.log_shapes.data = self.log_shapes.data.to(device)
         self.weights.data = self.weights.data.to(device)
-        batch_size = input.size(0)
-        sequence_length = input.size(1)
-        # device = input.device
-        # self.kernels_centers.data = self.kernels_centers.data.to(device)
-        # self.log_shapes.data = self.log_shapes.data.to(device)
-        # self.weights.data = self.weights.data.to(device)
 
         # Expand centers to match the batch and sequence length
         c = self.kernels_centers.expand(batch_size, sequence_length, self.num_kernels, self.in_features_dim)
@@ -101,7 +92,7 @@ class RBFLayer(nn.Module):
         
         # Apply norm function to get distances
         r = self.norm_function(diff).to(device)
-        # .to(device) # Shape: [batch_size, sequence_length, num_kernels]
+        #  # Shape: [batch_size, sequence_length, num_kernels]
 
         # Apply shape parameters (log_shapes) to the distances
         eps_r = self.log_shapes.exp().unsqueeze(0).unsqueeze(0) * r
