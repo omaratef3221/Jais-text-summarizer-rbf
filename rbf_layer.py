@@ -26,7 +26,6 @@ class RBFLayer(nn.Module):
         self.norm_function = norm_function
         self.normalization = normalization
 
-        self.norm_function.to(device)
         
         self.initial_shape_parameter = initial_shape_parameter
         self.constant_shape_parameter = constant_shape_parameter
@@ -96,7 +95,7 @@ class RBFLayer(nn.Module):
         diff = input.unsqueeze(2) - c  # Shape: [batch_size, sequence_length, num_kernels, in_features_dim]
 
         # Apply norm function to get distances
-        r = self.norm_function(diff)  # Shape: [batch_size, sequence_length, num_kernels]
+        r = self.norm_function(diff).to(device)  # Shape: [batch_size, sequence_length, num_kernels]
 
         # Apply shape parameters (log_shapes) to the distances
         eps_r = self.log_shapes.exp().unsqueeze(0).unsqueeze(0) * r
