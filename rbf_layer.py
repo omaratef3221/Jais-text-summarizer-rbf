@@ -26,7 +26,7 @@ class RBFLayer(nn.Module):
         self.norm_function = norm_function
         self.normalization = normalization
 
-        # self.norm_function.to(device)
+        self.norm_function.to(device)
         
         self.initial_shape_parameter = initial_shape_parameter
         self.constant_shape_parameter = constant_shape_parameter
