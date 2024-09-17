@@ -46,7 +46,7 @@ def main(args):
 
     print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
     if args.EnableRBF == "rbf":
-        replace_ffn_with_rbf_jais(model, 5)
+        replace_ffn_with_rbf_jais(model, 2)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
         
         print(model)
@@ -60,14 +60,22 @@ def main(args):
     # Prepare training arguments
     training_params = TrainingArguments(
         output_dir=training_output_dir,
-        save_strategy="epoch",
-        auto_find_batch_size=True,
-        max_steps=-1,
-        num_train_epochs=args.epochs,
-        save_steps=1,
-        learning_rate=1e-4,
-        logging_strategy='epoch',
-        bf16=True,
+        save_strategy="epoch", 
+        evaluation_strategy="epoch",  # Evaluate at the end of each epoch
+        auto_find_batch_size=True,  # Automatically find optimal batch size
+        max_steps=-1,  # Train until the end of dataset
+        num_train_epochs=args.epochs,  # Number of epochs to train
+        save_steps=1,  # Save model every epoch
+        learning_rate=1e-4,  # Initial learning rate
+        logging_strategy="steps",  # Log after each step for more detailed feedback
+        logging_steps=50,  # Log every 50 steps
+        bf16=True,  # Use bfloat16 if available
+        gradient_accumulation_steps=4,  # Simulate larger batch sizes by accumulating gradients
+        gradient_checkpointing=True,  # Saves memory by re-computing some activations
+        optim="adamw_torch",  # Use the AdamW optimizer from PyTorch
+        lr_scheduler_type="cosine",  # Cosine learning rate decay
+        warmup_steps=500,  # Number of steps for learning rate warmup
+        weight_decay=0.01,  # Apply weight decay to avoid overfitting
     )
 
     # Initialize the Trainer
