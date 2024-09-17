@@ -4,9 +4,9 @@ def replace_ffn_with_rbf_jais(model, num_kernels):
     for i, block in enumerate(model.transformer.h):
         print(f"Replacing feedforward layers with RBF in block {i}")
         
-        in_features = 2048  # Adjusted to match the model architecture
-        intermediate_features = 6144  # Typically 3x the in_features size
-
+        in_features = block.mlp.c_fc.weight.size(1)  
+        intermediate_features = block.mlp.c_fc.weight.size(0)  
+        
         # Get the device of the original layers
         original_device = block.mlp.c_fc.weight.device
 
