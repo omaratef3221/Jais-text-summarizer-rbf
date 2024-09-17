@@ -61,15 +61,13 @@ def main(args):
     training_params = TrainingArguments(
         output_dir=training_output_dir,
         save_strategy="epoch", 
-        evaluation_strategy="epoch",  # Evaluate at the end of each epoch
-        auto_find_batch_size=True,  # Automatically find optimal batch size
-        max_steps=-1,  # Train until the end of dataset
-        num_train_epochs=args.epochs,  # Number of epochs to train
-        save_steps=1,  # Save model every epoch
-        learning_rate=1e-4,  # Initial learning rate
-        logging_strategy="steps",  # Log after each step for more detailed feedback
-        logging_steps=50,  # Log every 50 steps
-        bf16=True,  # Use bfloat16 if available
+        auto_find_batch_size=True,  
+        max_steps=-1,  
+        num_train_epochs=args.epochs,  
+        save_steps=1,  
+        learning_rate=1e-4, 
+        logging_strategy="epoch", 
+        bf16=True,  
     )
 
     # Initialize the Trainer
