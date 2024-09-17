@@ -46,7 +46,7 @@ def main(args):
 
     print("Number of Original Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
     if args.EnableRBF == "rbf":
-        replace_ffn_with_rbf_jais(model, 1)
+        replace_ffn_with_rbf_jais(model, 2)
         print("Number of RBF Model parameters: ", print_number_of_trainable_model_parameters(model), flush=True)
         
         print(model)
@@ -65,7 +65,7 @@ def main(args):
         max_steps=-1,
         num_train_epochs=args.epochs,
         save_steps=1,
-        # learning_rate=1e-5,
+        learning_rate=1e-4,
         logging_strategy='epoch',
         bf16=True,
     )
