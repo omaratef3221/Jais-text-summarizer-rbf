@@ -70,12 +70,6 @@ def main(args):
         logging_strategy="steps",  # Log after each step for more detailed feedback
         logging_steps=50,  # Log every 50 steps
         bf16=True,  # Use bfloat16 if available
-        gradient_accumulation_steps=4,  # Simulate larger batch sizes by accumulating gradients
-        gradient_checkpointing=True,  # Saves memory by re-computing some activations
-        optim="adamw_torch",  # Use the AdamW optimizer from PyTorch
-        lr_scheduler_type="cosine",  # Cosine learning rate decay
-        warmup_steps=500,  # Number of steps for learning rate warmup
-        weight_decay=0.01,  # Apply weight decay to avoid overfitting
     )
 
     # Initialize the Trainer
