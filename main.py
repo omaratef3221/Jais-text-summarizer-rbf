@@ -68,6 +68,7 @@ def main(args):
         learning_rate=1e-4, 
         logging_strategy="epoch", 
         bf16=True,  
+        lr_scheduler_type="constant"
     )
 
     # Initialize the Trainer
