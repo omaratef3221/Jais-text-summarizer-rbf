@@ -17,7 +17,7 @@ def summarize_text(model, tokenizer, text):
     \n
     """
     inputs = tokenizer.encode(prompt, return_tensors="pt", max_length=400, truncation=True).to("cuda")
-    outputs = model.generate(inputs, max_length=500)
+    outputs = model.generate(inputs, max_length=450)
     summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return summary
 
