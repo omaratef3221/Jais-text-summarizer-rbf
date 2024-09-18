@@ -9,6 +9,18 @@ def l_norm(x, p=2):
 def rbf_gaussian(x):
     return (-x.pow(2)).exp()
 
+# Multiquadric RBF
+def multiquadric_rbf(r: torch.Tensor, epsilon: float = 1.0) -> torch.Tensor:
+    return torch.sqrt(1 + (r / epsilon) ** 2)
+
+# Inverse Multiquadric RBF
+def inverse_multiquadric_rbf(r: torch.Tensor, epsilon: float = 1.0) -> torch.Tensor:
+    return 1.0 / torch.sqrt(1 + (r / epsilon) ** 2)
+
+# Linear RBF
+def linear_rbf(r: torch.Tensor) -> torch.Tensor:
+    return r
+
 class CustomRBFFeedForward(nn.Module):
     def __init__(self, in_features, out_features, num_kernels):
         super(CustomRBFFeedForward, self).__init__()
@@ -17,7 +29,7 @@ class CustomRBFFeedForward(nn.Module):
             in_features_dim=in_features,  # Input size (e.g., 5120)
             num_kernels=num_kernels,  # Number of kernels in the RBF layer (can be tuned)
             out_features_dim=out_features,  # Output size (e.g., 5120)
-            radial_function=rbf_gaussian,  # Use the Gaussian RBF
+            radial_function=multiquadric_rbf,  # Use the Gaussian RBF
             norm_function=l_norm  # Use Euclidean norm
         )
 
