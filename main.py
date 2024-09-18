@@ -30,8 +30,8 @@ def main(args):
     tokenizer, model  = get_model(args.model_id)
     
     def preprocess_dataset(example):
-        example["input_ids"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 500, truncation=True, return_tensors="pt").input_ids
-        example["labels"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 500, truncation=True, return_tensors="pt").input_ids
+        example["input_ids"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 450, truncation=True, return_tensors="pt").input_ids
+        example["labels"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 450, truncation=True, return_tensors="pt").input_ids
         return example
     
     train_data = get_df(args.df_file_path, sample_size=12000)
