@@ -8,7 +8,9 @@ def replace_ffn_with_rbf_jais(model, num_kernels):
         # intermediate_features = 6144  # Typically 3x the in_features size
         
         in_features = block.mlp.c_fc.weight.size(1)
+        print(in_features)
         intermediate_features = in_features * 3
+        print(intermediate_features)
 
         # Get the device of the original layers
         original_device = block.mlp.c_fc.weight.device
