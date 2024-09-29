@@ -29,7 +29,7 @@ class CustomRBFFeedForward(nn.Module):
             in_features_dim=in_features,  # Input size (e.g., 5120)
             num_kernels=num_kernels,  # Number of kernels in the RBF layer (can be tuned)
             out_features_dim=out_features,  # Output size (e.g., 5120)
-            radial_function=inverse_multiquadric_rbf,  # Use the Gaussian RBF
+            radial_function=linear_rbf,  # Use the Gaussian RBF
             norm_function=l_norm  # Use Euclidean norm
         )
 
