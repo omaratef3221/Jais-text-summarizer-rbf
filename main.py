@@ -60,7 +60,6 @@ def main(args):
     # Prepare training arguments
     training_params = TrainingArguments(
         output_dir=training_output_dir,
-        save_strategy="epoch",
         auto_find_batch_size=True,
         max_steps=-1,
         num_train_epochs=args.epochs,
