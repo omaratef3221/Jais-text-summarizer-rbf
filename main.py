@@ -64,7 +64,7 @@ def main(args):
         auto_find_batch_size=True,
         max_steps=-1,
         num_train_epochs=args.epochs,
-        save_steps=1,
+        save_strategy='no',
         learning_rate=1e-4,
         logging_strategy='epoch',
         bf16=True,
