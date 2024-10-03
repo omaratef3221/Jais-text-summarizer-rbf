@@ -34,7 +34,7 @@ def main(args):
         example["labels"] = tokenizer(example["full_prompt"], padding="max_length", max_length = 450, truncation=True, return_tensors="pt").input_ids
         return example
     
-    train_data = get_df(args.df_file_path, sample_size=7500)
+    train_data = get_df(args.df_file_path, sample_size=6000)
     data = get_data_final(train_data)
     
     data = Dataset.from_pandas(data)
