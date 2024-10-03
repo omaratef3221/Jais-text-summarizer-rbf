@@ -64,7 +64,7 @@ def main(args):
         max_steps=-1,
         num_train_epochs=args.epochs,
         save_strategy='no',
-        learning_rate=1e-4,
+        learning_rate=1e-3,
         logging_strategy='epoch',
         bf16=True,
         lr_scheduler_type="constant"
